@@ -1,5 +1,4 @@
 import App from '../src/App';
-import Html from '../src/Html';
 import { renderToString, renderToStaticMarkup } from 'react-dom/server';
 import { ApolloProvider, ApolloClient, createHttpLink } from '@apollo/client';
 import {
@@ -36,13 +35,31 @@ export default function render(url, res) {
     res.status(200);
     res.setHeader('Content-type', 'text/html');
     res.send(
-      renderToString(
-        <Html
-          assets={assets}
-          content={content}
-          initialState={client.extract()}
-        />
-      )
+      `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="shortcut icon" href="favicon.ico" />
+    <link rel="stylesheet" href="${assets['main.css']}" />
+    <title>React Apollo SSR</title>
+  </head>
+  <body>
+    <noscript>
+      <b>Enable JavaScript to run this app.</b>
+    </noscript>
+    <div id="root">${content}</div>
+    <script>
+window.assetManifest = ${JSON.stringify(assets)};
+window.__APOLLO_STATE__ = ${JSON.stringify(client.extract()).replace(
+        /</g,
+        '\\u003c'
+      )};
+    </script>
+    <script type="text/javascript" src="${assets['main.js']}" />
+  </body>
+</html>
+`
     );
     res.end();
   });
