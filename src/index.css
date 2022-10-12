@@ -41,12 +41,12 @@ a:visited {
 ul,
 ol {
   margin: 0;
-  padding: 0;
+  padding-left: 1rem;
 }
 
-ul {
+.list-style-none {
+  padding: 0;
   list-style: none;
-  margin: 0;
 }
 
 .App {
@@ -88,4 +88,27 @@ a.Tile {
   width: 100%;
   height: 100%;
   text-decoration: none;
+}
+
+.Tabs-header {
+  display: flex;
+  gap: 1rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.Tabs-tabItem {
+  padding: 0.25rem;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.Tabs-tabItem--selected {
+  background: #fff;
+  border-top-left-radius: 0.125rem;
+  border-top-right-radius: 0.125rem;
+  color: #333;
+}
+
+.Tabs-content {
+  padding: 1rem 0;
 }

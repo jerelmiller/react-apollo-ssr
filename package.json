@@ -20,6 +20,7 @@
     "@types/rimraf": "^3.0.2",
     "babel-loader": "^8.2.5",
     "babel-preset-react-app": "^10.0.1",
+    "classnames": "^2.3.2",
     "compression": "^1.7.4",
     "concurrently": "^7.4.0",
     "css-loader": "^6.7.1",
@@ -42,18 +43,21 @@
     "webpack-node-externals": "^3.0.0"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "2.13.6",
     "@tsconfig/create-react-app": "^1.0.2",
     "@types/react": "^18.0.21",
     "@types/react-dom": "^18.0.6",
     "cross-env": "^7.0.3",
     "prettier": "^2.7.1",
-    "typescript": "^4.8.4"
+    "typescript": "^4.8.4",
+    "@graphql-codegen/client-preset": "1.0.6"
   },
   "scripts": {
     "start": "concurrently \"npm run server:dev\" \"npm run bundler:server:dev\" \"npm run bundler:client:dev\"",
     "server:dev": "NODE_ENV=development nodemon --watch build/server build/server/server.js",
     "bundler:server:dev": "cross-env NODE_ENV=development nodemon --config nodemon.build.json -- scripts/build.server.js",
-    "bundler:client:dev": "cross-env NODE_ENV=development nodemon --config nodemon.build.json -- scripts/build.client.js"
+    "bundler:client:dev": "cross-env NODE_ENV=development nodemon --config nodemon.build.json -- scripts/build.client.js",
+    "codegen": "graphql-codegen --config codegen.ts"
   },
   "prettier": {
     "semi": true,

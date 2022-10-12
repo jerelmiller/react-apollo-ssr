@@ -1,31 +1,25 @@
-import { gql, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { Link } from 'react-router-dom';
+import { graphql } from '../gql';
 
-interface AllCountriesQuery {
-  countries: {
-    code: string;
-    name: string;
-  }[];
-}
-
-const ALL_COUNTRIES_QUERY = gql`
+const ALL_COUNTRIES_QUERY = graphql(/* GraphQL */ `
   query AllCountriesQuery {
     countries {
       code
       name
     }
   }
-`;
+`);
 
 const Index = () => {
-  const { data, loading } = useQuery<AllCountriesQuery>(ALL_COUNTRIES_QUERY);
+  const { data, loading } = useQuery(ALL_COUNTRIES_QUERY);
 
   if (loading) {
     return <>Loading...</>;
   }
 
   return (
-    <ul>
+    <ul className="list-style-none">
       {data?.countries.map((country) => (
         <li key={country.code}>
           <Link to={`/countries/${country.code}`}>

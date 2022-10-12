@@ -5,5 +5,11 @@ export default new InMemoryCache({
     Country: {
       keyFields: ['code'],
     },
+    Language: {
+      keyFields: ['code'],
+    },
+    State: {
+      keyFields: ['name'],
+    },
   },
 });
