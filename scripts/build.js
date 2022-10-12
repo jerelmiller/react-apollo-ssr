@@ -25,6 +25,7 @@ webpack(
         {
           test: /\.(css)$/,
           use: [MiniCssExtractPlugin.loader, 'css-loader'],
+          exclude: /node_modules/,
         },
         {
           test: /\.tsx?$/,
