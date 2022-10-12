@@ -1,10 +1,6 @@
 import App from '../src/App';
-import { renderToString, renderToStaticMarkup } from 'react-dom/server';
 import { ApolloProvider, ApolloClient, createHttpLink } from '@apollo/client';
-import {
-  getDataFromTree,
-  renderToStringWithData,
-} from '@apollo/client/react/ssr';
+import { renderToStringWithData } from '@apollo/client/react/ssr';
 import { StaticRouter } from 'react-router-dom/server';
 import cache from '../src/cache';
 
@@ -14,15 +10,15 @@ const assets = {
   'main.css': '/client/main.css',
 };
 
-const client = new ApolloClient({
-  ssrMode: true,
-  link: createHttpLink({ uri: 'https://countries.trevorblades.com' }),
-  cache,
-});
-
 export default function render(url, res) {
   res.socket.on('error', (error) => {
     console.error('Fatal', error);
+  });
+
+  const client = new ApolloClient({
+    ssrMode: true,
+    link: createHttpLink({ uri: 'https://countries.trevorblades.com' }),
+    cache,
   });
 
   renderToStringWithData(
@@ -35,12 +31,11 @@ export default function render(url, res) {
     res.status(200);
     res.setHeader('Content-type', 'text/html');
     res.send(
-      `<!DOCTYPE html>
+      `<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="shortcut icon" href="favicon.ico" />
     <link rel="stylesheet" href="${assets['main.css']}" />
     <title>React Apollo SSR</title>
   </head>

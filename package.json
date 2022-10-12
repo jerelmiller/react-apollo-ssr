@@ -50,9 +50,8 @@
     "typescript": "^4.8.4"
   },
   "scripts": {
-    "start": "concurrently \"npm run server:dev\" \"npm run bundler:dev\"",
-    "server:dev": "cross-env NODE_ENV=development nodemon -- build/server/server.js",
-    "bundler:dev": "concurrently \"npm run bundler:server:dev\" \"npm run bundler:client:dev\"",
+    "start": "concurrently \"npm run server:dev\" \"npm run bundler:server:dev\" \"npm run bundler:client:dev\"",
+    "server:dev": "NODE_ENV=development nodemon -- build/server/server.js",
     "bundler:server:dev": "cross-env NODE_ENV=development nodemon -- scripts/build.server.js",
     "bundler:client:dev": "cross-env NODE_ENV=development nodemon -- scripts/build.client.js"
   },
