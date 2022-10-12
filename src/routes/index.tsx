@@ -1,4 +1,5 @@
 import { gql, useQuery } from '@apollo/client';
+import { Link } from 'react-router-dom';
 
 interface AllCountriesQuery {
   countries: {
@@ -27,7 +28,9 @@ const Index = () => {
     <ul>
       {data?.countries.map((country) => (
         <li key={country.code}>
-          {country.code} - {country.name}
+          <Link to={`/countries/${country.code}`}>
+            {country.code} - {country.name}
+          </Link>
         </li>
       ))}
     </ul>

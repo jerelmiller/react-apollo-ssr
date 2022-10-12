@@ -3,7 +3,6 @@ import { BrowserRouter } from 'react-router-dom';
 import { createHttpLink, ApolloProvider, ApolloClient } from '@apollo/client';
 
 import App from './App';
-import Html from './Html';
 import cache from './cache';
 import './index.css';
 

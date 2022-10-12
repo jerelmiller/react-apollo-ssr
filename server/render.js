@@ -56,7 +56,7 @@ window.__APOLLO_STATE__ = ${JSON.stringify(client.extract()).replace(
         '\\u003c'
       )};
     </script>
-    <script type="text/javascript" src="${assets['main.js']}" />
+    <script type="text/javascript" src="${assets['main.js']}"></script>
   </body>
 </html>
 `
