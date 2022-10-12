@@ -1,12 +1,11 @@
-import { ReactNode } from 'react';
-
 interface HtmlProps {
   assets: Record<string, string>;
-  children: ReactNode;
+  content: string;
   title?: string;
+  initialState?: Record<string, any>;
 }
 
-const Html = ({ assets, children, title }: HtmlProps) => {
+const Html = ({ assets, content, title, initialState = {} }: HtmlProps) => {
   return (
     <html lang="en">
       <head>
@@ -22,12 +21,19 @@ const Html = ({ assets, children, title }: HtmlProps) => {
             __html: `<b>Enable JavaScript to run this app.</b>`,
           }}
         />
-        {children}
+        <div id="root" dangerouslySetInnerHTML={{ __html: content }} />
         <script
           dangerouslySetInnerHTML={{
-            __html: `window.assetManifest = ${JSON.stringify(assets)};`,
+            __html: `
+window.assetManifest = ${JSON.stringify(assets)};
+window.__APOLLO_STATE__ = ${JSON.stringify(initialState).replace(
+              /</g,
+              '\\u003c'
+            )};
+`.trim(),
           }}
         />
+        <script type="text/javascript" src={assets['main.js']} />
       </body>
     </html>
   );

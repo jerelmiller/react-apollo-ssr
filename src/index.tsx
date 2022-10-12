@@ -3,19 +3,21 @@ import { BrowserRouter } from 'react-router-dom';
 import { createHttpLink, ApolloProvider, ApolloClient } from '@apollo/client';
 
 import App from './App';
+import Html from './Html';
 import cache from './cache';
 import './index.css';
 
 const client = new ApolloClient({
+  connectToDevTools: true,
   link: createHttpLink({ uri: 'https://countries.trevorblades.com' }),
-  cache,
+  cache: cache.restore((window as any).__APOLLO_STATE__),
 });
 
 hydrateRoot(
-  document,
+  document.getElementById('root')!,
   <BrowserRouter>
     <ApolloProvider client={client}>
-      <App assets={(window as any)['assetManifest']} />
+      <App />
     </ApolloProvider>
   </BrowserRouter>
 );

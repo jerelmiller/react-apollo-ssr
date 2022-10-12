@@ -1,6 +1,11 @@
-import { renderToPipeableStream } from 'react-dom/server';
 import App from '../src/App';
+import Html from '../src/Html';
+import { renderToString, renderToStaticMarkup } from 'react-dom/server';
 import { ApolloProvider, ApolloClient, createHttpLink } from '@apollo/client';
+import {
+  getDataFromTree,
+  renderToStringWithData,
+} from '@apollo/client/react/ssr';
 import { StaticRouter } from 'react-router-dom/server';
 import cache from '../src/cache';
 
@@ -20,28 +25,25 @@ export default function render(url, res) {
   res.socket.on('error', (error) => {
     console.error('Fatal', error);
   });
-  let didError = false;
-  const stream = renderToPipeableStream(
+
+  renderToStringWithData(
     <StaticRouter location={url}>
       <ApolloProvider client={client}>
         <App assets={assets} />
       </ApolloProvider>
-    </StaticRouter>,
-    {
-      bootstrapScripts: [assets['main.js']],
-      onShellReady() {
-        // If something errored before we started streaming, we set the error code appropriately.
-        res.statusCode = didError ? 500 : 200;
-        res.setHeader('Content-type', 'text/html');
-        stream.pipe(res);
-      },
-      onError(x) {
-        didError = true;
-        console.error(x);
-      },
-    }
-  );
-  // Abandon and switch to client rendering if enough time passes.
-  // Try lowering this to see the client recover.
-  // setTimeout(() => stream.abort(), ABORT_DELAY);
+    </StaticRouter>
+  ).then((content) => {
+    res.status(200);
+    res.setHeader('Content-type', 'text/html');
+    res.send(
+      renderToString(
+        <Html
+          assets={assets}
+          content={content}
+          initialState={client.extract()}
+        />
+      )
+    );
+    res.end();
+  });
 }
