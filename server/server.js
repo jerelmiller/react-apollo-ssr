@@ -1,45 +1,22 @@
-const babelRegister = require('@babel/register');
-
-babelRegister({
-  ignore: [/[\\\/](build|server\/server|node_modules)[\\\/]/],
-  presets: [
-    ['react-app', { runtime: 'automatic' }],
-    '@babel/preset-typescript',
-  ],
-  plugins: ['@babel/transform-modules-commonjs'],
-  extensions: ['.js', '.ts', '.tsx', '.json'],
-});
-
-const express = require('express');
-const compress = require('compression');
-const { readFileSync } = require('fs');
-const path = require('path');
-const render = require('./render');
-const { JS_BUNDLE_DELAY } = require('./delays');
+import express from 'express';
+import compress from 'compression';
+import { readFileSync } from 'fs';
+import path from 'path';
+import render from './render';
 
 const PORT = process.env.PORT || 4000;
 const app = express();
 
-app.use((req, res, next) => {
-  if (req.url.endsWith('.js')) {
-    // Artificially delay serving JS
-    // to demonstrate streaming HTML.
-    setTimeout(next, JS_BUNDLE_DELAY);
-  } else {
-    next();
-  }
-});
-
 app.use(compress());
+app.use(express.static('build'));
+app.use(express.static('public'));
 app.get(
-  '/',
+  '*',
   handleErrors(async function (req, res) {
     await waitForWebpack();
     render(req.url, res);
   })
 );
-app.use(express.static('build'));
-app.use(express.static('public'));
 
 app
   .listen(PORT, () => {
@@ -76,7 +53,7 @@ function handleErrors(fn) {
 async function waitForWebpack() {
   while (true) {
     try {
-      readFileSync(path.resolve(__dirname, '../build/main.js'));
+      readFileSync(path.resolve(__dirname, '../client/main.js'));
       return;
     } catch (err) {
       console.log(

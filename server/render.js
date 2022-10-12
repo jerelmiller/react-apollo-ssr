@@ -1,24 +1,32 @@
-const { renderToPipeableStream } = require('react-dom/server');
-const App = require('../src/App').default;
-const { DataProvider } = require('../src/data');
-const { API_DELAY, ABORT_DELAY } = require('./delays');
+import { renderToPipeableStream } from 'react-dom/server';
+import App from '../src/App';
+import { ApolloProvider, ApolloClient, createHttpLink } from '@apollo/client';
+import { StaticRouter } from 'react-router-dom/server';
+import cache from '../src/cache';
 
 // In a real setup, you'd read it from webpack build stats.
-let assets = {
-  'main.js': '/main.js',
-  'main.css': '/main.css',
+const assets = {
+  'main.js': '/client/main.js',
+  'main.css': '/client/main.css',
 };
 
-module.exports = function render(url, res) {
+const client = new ApolloClient({
+  ssrMode: true,
+  link: createHttpLink({ uri: 'https://countries.trevorblades.com' }),
+  cache,
+});
+
+export default function render(url, res) {
   res.socket.on('error', (error) => {
     console.error('Fatal', error);
   });
   let didError = false;
-  const data = createServerData();
   const stream = renderToPipeableStream(
-    <DataProvider data={data}>
-      <App assets={assets} />
-    </DataProvider>,
+    <StaticRouter location={url}>
+      <ApolloProvider client={client}>
+        <App assets={assets} />
+      </ApolloProvider>
+    </StaticRouter>,
     {
       bootstrapScripts: [assets['main.js']],
       onShellReady() {
@@ -35,31 +43,5 @@ module.exports = function render(url, res) {
   );
   // Abandon and switch to client rendering if enough time passes.
   // Try lowering this to see the client recover.
-  setTimeout(() => stream.abort(), ABORT_DELAY);
-};
-
-// Simulate a delay caused by data fetching.
-// We fake this because the streaming HTML renderer
-// is not yet integrated with real data fetching strategies.
-function createServerData() {
-  let done = false;
-  let promise = null;
-  return {
-    read() {
-      if (done) {
-        return;
-      }
-      if (promise) {
-        throw promise;
-      }
-      promise = new Promise((resolve) => {
-        setTimeout(() => {
-          done = true;
-          promise = null;
-          resolve();
-        }, API_DELAY);
-      });
-      throw promise;
-    },
-  };
+  // setTimeout(() => stream.abort(), ABORT_DELAY);
 }
