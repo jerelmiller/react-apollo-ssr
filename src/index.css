@@ -1,13 +1,24 @@
 :root {
-  --app-background: #4f11c0;
+  --color-indigo-50: #ebe6ff;
+  --color-indigo-100: #d9cfff;
+  --color-indigo-200: #ad9bf6;
+  --color-indigo-300: #8f78e7;
+  --color-indigo-400: #7156d9;
+  --color-indigo-500: #3f20ba;
+  --color-indigo-600: #381ea0;
+  --color-indigo-700: #311c87;
+  --color-indigo-800: #2f1d76;
+  --color-indigo-900: #2d1f66;
+  --color-whiteAlpha-300: rgba(255, 255, 255, 0.16);
+
+  --app-background: var(--color-indigo-900);
+  --border-color: var(--color-whiteAlpha-300);
 }
 
 html,
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: 'Source Sans Pro', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
@@ -23,15 +34,26 @@ a:visited {
   color: inherit;
 }
 
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+}
+
 .App {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: 100vh;
 }
 
 .App-header {
   padding: 1rem;
-  background: #2f1d80;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .App-header h1 {
@@ -41,4 +63,9 @@ a:visited {
 .App-main {
   flex: 1;
   padding: 1rem;
+  overflow: auto;
+}
+
+.Tile {
+  border-radius: 0.25rem;
 }

@@ -51,9 +51,9 @@
   },
   "scripts": {
     "start": "concurrently \"npm run server:dev\" \"npm run bundler:server:dev\" \"npm run bundler:client:dev\"",
-    "server:dev": "NODE_ENV=development nodemon -- build/server/server.js",
-    "bundler:server:dev": "cross-env NODE_ENV=development nodemon -- scripts/build.server.js",
-    "bundler:client:dev": "cross-env NODE_ENV=development nodemon -- scripts/build.client.js"
+    "server:dev": "NODE_ENV=development nodemon --watch build/server build/server/server.js",
+    "bundler:server:dev": "cross-env NODE_ENV=development nodemon --config nodemon.build.json -- scripts/build.server.js",
+    "bundler:client:dev": "cross-env NODE_ENV=development nodemon --config nodemon.build.json -- scripts/build.client.js"
   },
   "prettier": {
     "semi": true,
@@ -69,12 +69,6 @@
         }
       ],
       "@babel/preset-typescript"
-    ]
-  },
-  "nodemonConfig": {
-    "ext": "js,ts,tsx,json,css",
-    "ignore": [
-      "build/*"
     ]
   }
 }

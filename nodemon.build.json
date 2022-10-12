@@ -1,0 +1,4 @@
+{
+  "ext": "js,ts,tsx,json,css",
+  "ignore": ["build/*"]
+}
